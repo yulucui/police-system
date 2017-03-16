@@ -302,7 +302,7 @@ var dict = {
         }
     },
     '全国重点人员':{
-        queryString:'A_source:"A_db_sis_V_"',
+        queryString:'A_source:"A_db_zdrXY_T_ZZRK_QGZDRYXX"',
         fieldsMap:{
             SRC_HANDSET_NUM:'部级重点人员编号',
             XM:'姓名',
