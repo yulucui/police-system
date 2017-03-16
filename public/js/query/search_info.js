@@ -1089,7 +1089,7 @@ function fenye(page, func, total, pageNum,pageSize) {
                     htm += '<li><a href="javascript:void(0);" onclick="' + func + '(' + (i - 1) * pageSize + ')">' + i + '</a></li>'
                 }
             }
-            htm+='<input id="goTo" type="text" /><button onClick="' + func + '(' +  'getInputvalue()'  + ')">跳转</button>';
+            htm+='<input id="goTo" type="text" /><button class="go_btn" onClick="' + func + '(' +  'getInputvalue()'  + ')">跳转</button>';
             return htm;
         })()
         , '<li>'

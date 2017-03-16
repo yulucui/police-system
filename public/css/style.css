@@ -380,7 +380,12 @@ a,li{
 	color:#e2e2e2;
 }
 #goTo{
-	width: 40px;
+	width: 45px;
+	height: 34px;
 	border-radius: 4px;
 	border:1px solid #ccc;
+	margin-left: 10px;
+}
+.go_btn{
+	height: 34px;
 }
