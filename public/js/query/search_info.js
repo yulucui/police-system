@@ -859,7 +859,7 @@ function queryInfo(offset){
                 typeList.push('<tr>');
 
                 ths.map(function (s) {
-                    typeList.push('<td>');
+                    typeList.push('<td title="'+ fields[s] +'"><div style="width:300px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">');
                     if(fields[s].length == 13 &&
                         s.indexOf("TIME") >= 0 || s.indexOf("time") >= 0 ||
                         s.indexOf("SJ") >= 0 || s.indexOf("sj") >= 0){
@@ -869,9 +869,10 @@ function queryInfo(offset){
                         s.indexOf("RQ") >= 0 || s.indexOf("YXQ_Z") >= 0){
                         typeList.push(formatDate2(parseInt(fields[s])));
                     }else{
-                        typeList.push(fields[s].slice(0,20)+'……');
+                        // typeList.push(fields[s].slice(0,20)+'……');
+                        typeList.push(fields[s]);
                     }
-                    typeList.push('</td>');
+                    typeList.push('</div></td>');
                 });
 
                 typeList.push('</tr>');
