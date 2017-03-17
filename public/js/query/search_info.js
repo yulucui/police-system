@@ -812,7 +812,8 @@ function queryInfo(offset){
     if(keyWord != ''){
         queryString = queryString + ' AND ' + keyWord;
     }
-
+    $('#pages').show();
+    $("#tab1").empty().append('<div class="loading-quick loading-40"></div>');
     $.get('datas/query',
         {
             // queryString:'A_source:"A_db_b111_QHQB_HKDDC"',
@@ -881,7 +882,7 @@ function queryInfo(offset){
             typeList.push('</tbody></table>');
 
             $("#tab1").append(typeList.join(''));
-
+            $('#pages').show();
             fenye('#pages','queryInfo',total,pageNum+1,pageSize);
         })
 }
