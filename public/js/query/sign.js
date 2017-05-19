@@ -7,30 +7,21 @@ $(function () {
 
     function showTab(param) {
         $.get('datas/sign',param,function (data) {
-            var msg = [];
-            $(data).each(function (i,item) {
-                var sign = item['status'] ? '已签收' : '未签收',
-                    signColor = item['status'] ? 'green' : 'yellow',
-                    level = item['level'] ? '正常' : '预警',
-                    date = new Date(item["date"]).format('yyyy-MM-dd hh:mm:ss'),
-                    _id = item['_id'];
-                var html = '<tr>';
-                html += '<td><input name="choose" type="checkbox" _id="'+ _id +'"></td>';
-                html += '<td>'+ item["mark"] +'</td>';
-                html += '<td>'+ item["name"] +'</td>';
-                html += '<td>'+ item["cardId"] +'</td>';
-                html += '<td>'+ level +'</td>';
-                html += '<td>'+ item["position"] +'</td>';
-                html += '<td>'+ item["police"] +'</td>';
-                html += '<td>'+ date +'</td>';
-                html += '<td>'+ item["scheme"] +'</td>';
-                html += '<td class="'+ signColor +'">'+ sign +'</td>';
-                html += '</tr>';
-                msg.push(html);
+            $('#message_table').find('tbody').html('');
+            $(data).each(function(i,item){
+                var tds = trFormat(item).map(function(d,i){
+                    if(i == 7)
+                        return d ? '<td class="green">已签收</td>' : '<td class="yellow">未签收</td>';
+                    return '<td>'+ d +'</td>';
+                });
+                var trHtml = '<tr>';
+                trHtml += '<td><input name="choose" type="checkbox" _id="'+ item['_id'] +'"></td>';
+                trHtml += tds.join('');
+                trHtml += '</tr>';
+                $('#message_table')
+                    .find('tbody')
+                    .append(trHtml);
             });
-            $('#message_table')
-                .find('tbody')
-                .html(msg.join(''));
         });
     }
 
@@ -49,15 +40,27 @@ $(function () {
 
     //搜索 点击事件
     $('#search_btn').click(function () {
+        if($('#firstTime').val() || $('#lastTime').val() || $('#name_input').val() || $('#id_input').val()){
+            $('#pages').hide();
+            $('#result_message').hide();
+        } else {
+            $('#pages').show();
+            $('#result_message').show();
+        }
         var firstTime = new Date($('#firstTime').val()).getTime(),
             lastTime = new Date($('#lastTime').val()).getTime();
         var params = {
-            date: {}
+            // data: {
+            //     'QHQB_T_QHQB_TLDP_ID_NAME': $('#name_input').val()
+            // },
+            inserttime: {}
         };
-        $('#name_input').val() && (params.name = $('#name_input').val());
-        $('#id_input').val() && (params.cardId = $('#id_input').val());
-        firstTime && (params.date['$gte'] = firstTime);
-        lastTime && (params.date['$lte'] = lastTime);
+        $('#name_input').val() && (params['data.QHQB_T_QHQB_TLDP_ID_NAME'] = $('#name_input').val());
+        $('#id_input').val() && (params['data.QHQB_T_QHQB_TLDP_ID_NO'] = $('#id_input').val());
+        // !$('#id_input').val() && (delete params.resultModel.hits[0].fields['zdrXY_T_ZZRK_QGZDRYXX_SFZH']);
+        // !$('#name_input').val() && !$('#id_input').val() && (delete params.resultModel);
+        firstTime && (params.inserttime['$gte'] = firstTime);
+        lastTime && (params.inserttime['$lte'] = lastTime);
         skip = 0;
         showTab({
             page: {
@@ -74,6 +77,10 @@ $(function () {
         $('#result_message span').text(data.count);
         pageTotal = Math.ceil(data.count / 10);
         $('#pages').html(paging(1,Math.ceil(data.count / 10)));
+        if($('#pages li:first').next('li').hasClass('active'))
+            $('#pages li:first').hide();
+        if($('#pages li:last').prev().hasClass('active'))
+            $('#pages li:last').hide();
         // fenye2('#pages2','showTab',data.count,1,10);
     });
 
@@ -104,8 +111,28 @@ $(function () {
             }
         });
         $('#pages').html(paging(nowPage,pageTotal));
+        if($('#pages li:first').next('li').hasClass('active'))
+            $('#pages li:first').hide();
+        if($('#pages li:last').prev().hasClass('active'))
+            $('#pages li:last').hide();
     });
-
+    $('.go_btn').die().live('click',function jump(){
+        var nowPage = $('#goTo').val();
+        if(!nowPage || isNaN(nowPage)) return ;
+        skip = nowPage * 10 - 10;
+        showTab({
+            page: {
+                skip: skip,
+                limit: 10
+            }
+        });
+        $('#pages').html(paging(nowPage,pageTotal));
+        if($('#pages li:first').next('li').hasClass('active'))
+            $('#pages li:first').hide();
+        if($('#pages li:last').prev().hasClass('active'))
+            $('#pages li:last').hide();
+    });
+    
     function paging(page, total) {
 
         if (total == 0) return '<div></div>';
@@ -140,63 +167,7 @@ $(function () {
         } else {
             arr.push('<li class="jp-disabled page_num"><a aria-label="Next">»</a></li>');
         }
-
+        arr.push('<input id="goTo" type="number"><button class="go_btn">跳转</button>');
         return arr.join('');
     }
-    // function fenye2(page, func, total, pageNum,pageSize) {
-    //     var offset=pageNum*pageSize-pageSize;
-    //     var lastoff = offset > pageSize ? offset - pageSize : 0;
-    //     var nextoff = Math.floor(total / pageSize) + 1 == (Math.floor(offset / pageSize)) ? 0 : (offset + pageSize);
-    //
-    //     var page1 = {
-    //         page:{
-    //             skip:lastoff,
-    //             limit:pageSize
-    //         }
-    //     };
-    //     var page3 = {
-    //         page:{
-    //             skip:nextoff,
-    //             limit:pageSize
-    //         }
-    //     };
-    //
-    //     $(page).html(['<li>'
-    //         , '  <a onclick="', func, '(', page1, ')" aria-label="Previous">'
-    //         , '    <span aria-hidden="true">&laquo;</span>'
-    //         , '  </a>'
-    //         , '</li>'
-    //         , (function () {
-    //             var htm = ''
-    //             var allpages = Math.floor(total / pageSize) + 2;
-    //             var currentpage = Math.floor(offset / pageSize) + 1;
-    //             for (var i = 1; i < allpages; i++) {
-    //                 if (allpages - 1 > pageSize) {
-    //                     if ((currentpage > 5 && i == (currentpage - 2)) || i == (currentpage + 2)) {
-    //                         htm += '<li><a>...</a></li>'
-    //                     }
-    //                     if ((i < (currentpage - 2) && i > 3) || (i > (currentpage + 2) && i < (allpages - 3))) {
-    //                         continue;
-    //                     }
-    //                 }
-    //                 if (Math.floor(offset / pageSize) + 1 == i) {
-    //                     htm += '<li class="active"><a>' + i + '</a></li>'
-    //                 } else {
-    //                     var page2 = {
-    //                         page:{
-    //                             skip:(i - 1) * pageSize,
-    //                             limit:pageSize
-    //                         }
-    //                     };
-    //                     htm += '<li><a onclick="' + func + '(' + page2 + ')">' + i + '</a></li>'
-    //                 }
-    //             }
-    //             return htm;
-    //         })()
-    //         , '<li>'
-    //         , '  <a onclick="', func, '(', page3, ')" aria-label="Next">'
-    //         , '    <span aria-hidden="true">&raquo;</span>'
-    //         , '  </a>'
-    //         , '</li>'].join(''))
-    // }
 });

@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>琼海市警务系统</title>
+	<title>全文信息检索</title>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/common.css">
@@ -12,11 +12,16 @@
 <body>
 	<div class="row">
 	<div class="col-lg-12 header">
-		<div class="pull-left fontSize"><a href="javascript:void(0);" onclick="window.location.href='/'">琼海市警务系统</a></div>
+		<div class="pull-left fontSize"><a href="javascript:void(0);" onclick="window.location.href='/'">比对告警</a></div>
 		<div class="pull-right Color">
 			<div>
 			<span class='time-w'>当前时间: <span id='time'></span></span>
-			<span class='xin'>消息</span>
+			<span class='xin messageCount'>消息(0)</span>
+			<div class="bg_news1">
+				<p class="tips">有 <b class="tip1"></b> 条<span class='red'>比中结果</span></p>
+				<!--<p>有 <b class="tip2"></b> 条<span class='green'>前科人员比重结果</span></p>-->
+				<!--<p><a href="javascript:void(0);" class="message_query">点击查看</a></p>-->
+			</div>
 			</div>
 		</div>
 	</div>
@@ -44,18 +49,14 @@
 			<thead>
 				<tr>
 					<th><input type="checkbox" name="allChecked" id="allChecked" onclick="DoCheck()"/></th>
-					<!--<th>序号</th>-->
 					<th>重点人员类标记</th>
 					<th>姓名</th>
 					<th>身份证号</th>
-					<th>预警级别</th>
-					<!--<th>预警判断依据</th>-->
 					<th>活动发生地点详址</th>
-					<th>所属辖区派出所</th>
-					<!--<th>活动描述</th>-->
+					<!--<th>预警接受单位</th>-->
+					<th>活动发生时间</th>
 					<th>比中时间</th>
-					<th>比对方案名称</th>
-					<!--<th>模型名称</th>-->
+					<th>比中方案名称</th>
 					<th>处理状态</th>
 				</tr>
 			</thead>
@@ -96,13 +97,15 @@
 		</table>
 		<!-- 分页外围 -->
 		<ul class="pagination" id="pages"></ul>
-		<ul class="pagination" id="pages2"></ul>
+		<!--<ul class="pagination" id="pages2"></ul>-->
 	</div>
 	</div>
 	<script type="text/javascript" src='js/jquery-1.8.3.min.js'></script>
 	<script type="text/javascript" src='js/bootstrap.min.js'></script>
 	<script type="text/javascript" src='js/date.expand.js'></script>
 	<script type="text/javascript" src='js/My97DatePicker/WdatePicker.js'></script>
+	<script type="text/javascript" src='js/purl.js'></script>
+	<script type="text/javascript" src='js/query/alarm_formatter.js'></script>
 	<script type="text/javascript" src='js/query/sign.js'></script>
 	<script type="text/javascript" src='js/query/tips.js'></script>
 	<script type="text/javascript" src='js/script.js'></script>

@@ -15,6 +15,9 @@ $(document).ready(function(){
 	myfunction($(".menu .ulmenu1 li"),$(".ulmenu1 li a"),$(".content .menu1 .tab"));
 	myfunction($(".menu .ulmenu4 li"),$(".ulmenu4 li a"),$(".content .menu4 .tab"));
 	myfunction($(".menu .ulmenu5 li"),$(".ulmenu5 li a"),$(".content .menu5 .tab"));
+	myfunction($(".menu .ulmenu6 li"),$(".ulmenu6 li a"),$(".content .menu6 .tab"));
+	myfunction($(".menu .ulmenu7 li"),$(".ulmenu7 li a"),$(".content .menu7 .tab"));
+
 	$(function(){            //ul/li的折叠效果
 		$(".menu > ul").eq(0).show();
 		$(".menu h3").click(function(){

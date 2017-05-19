@@ -49,9 +49,11 @@ router.get('/dosign', function(req, res, next) {
 });
 
 router.get('/sign_count', function(req, res, next) {
-  signDao.getAllSign({},{},function(result) {
+  var param = req.param('param') || {};
+  signDao.getCount(param,function(result) {
     // res.send(callback);
-    res.send({count:result.length});
+    res.send({count:result});
   })
 });
+
 module.exports = router;

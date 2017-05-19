@@ -4,50 +4,38 @@ $(document).ready(function() {
     });
     tips_info();
     tips_info2();
-    tips_info3();
+    // tips_info3();
 });
 //消息数
 function tips_info(){
-    $.get('datas/query',
-        {
-            queryString:'A_source:"A_db_b111_QHQB_HKDDC"',
-            a_from:new Date('2017-01-01 00:00:00').getTime(),
-            a_to:new Date().getTime()
-        },
+    // $.get('datas/sign_count',{param:{'readStatus':0}},
+    $.get('datas/sign_count',{param:{'readStatus':0}},
         function(data){
             console.log(data);
-            $(".messageCount").html('消息('+0+')');
+            $(".messageCount").html('消息('+data.count+')');
             // $(".tip1").html(0);
             // $(".tip2").html(0);
         })
 }
 // 在逃人员比重结果
 function tips_info2(){
-    $.get('datas/query',
-        {
-            queryString:'A_source:"A_db_b111_QHQB_HKDDC"',
-            a_from:new Date('2017-01-01 00:00:00').getTime(),
-            a_to:new Date().getTime()
-        },
+    $.get('datas/sign_count',{param:{'readStatus':0}},
         function(data){
             console.log(data);
             // $(".messageCount").html('消息('+0+')');
-            $(".tip1").html(0);
+            $(".tip1").html(data.count);
+            if(data.count <= 0 && $('.message_query').length == 0)
+                $(".bg_news1").hide();
             // $(".tip2").html(0);
         })
 }
 //前科人员比重结果
-function tips_info3(){
-    $.get('datas/query',
-        {
-            queryString:'A_source:"A_db_b111_QHQB_HKDDC"',
-            a_from:new Date('2017-01-01 00:00:00').getTime(),
-            a_to:new Date().getTime()
-        },
-        function(data){
-            console.log(data);
-            // $(".messageCount").html('消息('+0+')');
-            // $(".tip1").html(0);
-            $(".tip2").html(0);
-        })
-}
+// function tips_info3(){
+//     $.get('datas/sign_count',{param:{status:1}},
+//         function(data){
+//             console.log(data);
+//             // $(".messageCount").html('消息('+0+')');
+//             // $(".tip1").html(0);
+//             $(".tip2").html(data.count);
+//         })
+// }

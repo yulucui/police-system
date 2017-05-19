@@ -13,26 +13,36 @@ var SearchDataService = require('./gen-nodejs/SearchData');
 var TFramedTransport = require('thrift/lib/nodejs/lib/thrift/transport').TFramedTransport;
 var TBinaryProtocol = require('thrift/lib/nodejs/lib/thrift/protocol').TBinaryProtocol;
 
-var connection = thrift.createConnection(
-    '10.0.1.81',
-    6060,
-    {
-        transport : TFramedTransport,
-        protocol : TBinaryProtocol
-    }
-);
+var j = 0;
+var start = new Date().getTime();
+for(var i = 0; i < 101; i++){
+    var connection = thrift.createConnection(
+        '10.0.1.81',
+        6060,
+        {
+            transport : TFramedTransport,
+            protocol : TBinaryProtocol
+        }
+    );
 
-// var serviceProtocol = thrift.createMultiplexServer(connection,RDictTableService);
-var multiplexer = new thrift.Multiplexer();
-var client =  multiplexer.createClient("com.aleiye.client.service.search.SearchData",SearchDataService,connection);
-// var client = thrift.createClient(RDictTableService,connection);
-var qm = new model.TQueryModel();
-qm.queryString = 'A_source:A_db_yancao_SC_CIG_INFO';
-qm.a_from = 1483200000000;
-qm.a_to = 1488297600000;
-client.query(qm,function (err,res) {
-    console.log(res);
-});
+    // var serviceProtocol = thrift.createMultiplexServer(connection,RDictTableService);
+    var multiplexer = new thrift.Multiplexer();
+    var client =  multiplexer.createClient("com.aleiye.client.service.search.SearchData",SearchDataService,connection);
+    // var client = thrift.createClient(RDictTableService,connection);
+    var qm = new model.TQueryModel();
+    qm.queryString = '*:*';
+    qm.a_from = 1483200000000;
+    qm.a_to = new Date().getTime();
+    client.query(qm,function (err,res) {
+        console.log(j);
+        connection.end();
+        j++;
+        if(j >= 100){
+            var end = new Date().getTime();
+            console.log(end - start);
+        }
+    });
+}
 // client.getAll
 // client.sayHello('yancao-cs','*:*','',function(err,result){
 //     if(err){

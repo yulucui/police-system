@@ -12,7 +12,12 @@ $(document).ready(function() {
     indexData();
     indexData2();
 });
-
+$("#index_search_input").keydown(function(event){  
+    if(event.which == "13"){  
+        var keyWord = $("#index_search_input").val();
+        window.location.href="search?keyWord="+keyWord;
+    } 
+});  
 //当前平台总数据量
 function indexData(){
     $.get('datas/query',
@@ -35,7 +40,8 @@ function indexData2(){
         {
             queryString:'*:*',
             a_from:new Date().getTime()-24*3600*1000,
-            a_to:new Date().getTime()
+            a_to:new Date().getTime(),
+            isProcessTime: true
             // pageSize:pageSize,
             // pageNum:pageNum
         },

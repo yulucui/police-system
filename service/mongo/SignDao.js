@@ -38,14 +38,36 @@ module.exports = {
             page.skip = parseInt(page.skip);
             page.limit = parseInt(page.limit);
         }
+        // page.sort = 'inserttime';
+        page.sort = [['inserttime','desc']];
         params = params || {};
-        if(params.date && params.date['$gte'])
-            params.date['$gte'] = parseInt(params.date['$gte']);
-        if(params.date && params.date['$lte'])
-            params.date['$lte'] = parseInt(params.date['$lte']);
+        if(params.inserttime && params.inserttime['$gte'])
+            params.inserttime['$gte'] = parseInt(params.inserttime['$gte']);
+        if(params.inserttime && params.inserttime['$lte'])
+            params.inserttime['$lte'] = parseInt(params.inserttime['$lte']);
+        if(params['data.QHQB_T_QHQB_TLDP_ID_NAME'])
+            params['data.QHQB_T_QHQB_TLDP_ID_NAME'] = new RegExp(params['data.QHQB_T_QHQB_TLDP_ID_NAME']);
+        if(params['data.QHQB_T_QHQB_TLDP_ID_NO'])
+            params['data.QHQB_T_QHQB_TLDP_ID_NO'] = new RegExp(params['data.QHQB_T_QHQB_TLDP_ID_NO']);  
         mongoConn(function (db) {
-            var reportCollection = db.collection('msg');
+            var reportCollection = db.collection('matchalarm');
             reportCollection.find(params,page).toArray(function (err,result) {
+                if(err){
+                    console.info('Error:' + err);
+                    return ;
+                }
+                callBack(result);
+                db.close();
+            });
+        })
+    },
+    getCount: function(params,callBack){
+        if(params && params.readStatus != undefined)
+            params.readStatus = parseInt(params.readStatus);
+        mongoConn(function (db) {
+            var reportCollection = db.collection('matchalarm');
+            if(params.status) params.status = parseInt(params.status);
+            reportCollection.count(params,function (err,result) {
                 if(err){
                     console.info('Error:' + err);
                     return ;
@@ -57,11 +79,11 @@ module.exports = {
     },
     doSign: function (ids,callBack) {
         mongoConn(function (db) {
-            var reportCollection = db.collection('msg');
+            var reportCollection = db.collection('matchalarm');
             var cot = 0;
             for(var i in ids){
                 var param = {_id: ObjectID(ids[i])};
-                reportCollection.update(param,{$set:{status:1}},function(err,result) {
+                reportCollection.update(param,{$set:{readStatus:1}},function(err,result) {
                     if(err){
                         console.info('Error:' + err);
                         return ;
