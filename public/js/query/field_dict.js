@@ -4348,6 +4348,35 @@ var fieldDict = {
             "name": "检票时间"
         }
     },
+    "A_db_QHQB_T_QHQB_DHHM": {
+        "QHQB_T_QHQB_DHHM_ID": {
+            "name": "id"
+        },
+        "QHQB_T_QHQB_DHHM_DHHM": {
+            "name": "电话号码"
+        },
+        "QHQB_T_QHQB_DHHM_LXR": {
+            "name": "联系人"
+        },
+        "QHQB_T_QHQB_DHHM_GMSFHM": {
+            "name": "身份证号"
+        },
+        "QHQB_T_QHQB_DHHM_DZQH": {
+            "name": "地址区划"
+        },
+        "QHQB_T_QHQB_DHHM_DZXZ": {
+            "name": "地址详址"
+        },
+        "QHQB_T_QHQB_DHHM_LYBBM": {
+            "name": "来源表表名"
+        },
+        "QHQB_T_QHQB_DHHM_LYBWLM": {
+            "name": "来源表物理名"
+        },
+        "QHQB_T_QHQB_DHHM_RKSJ": {
+            "name": "入库时间"
+        }
+    },
     "A_db_QHSJ_VIEW_COMPARERECORD_TO_QHSJ": {
         "QHSJ_VIEW_COMPARERECORD_TO_QHSJ_SCAN_TIME": {
             "name": "扫描时间"

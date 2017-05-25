@@ -139,6 +139,7 @@ var tableDict = ['A_db_sis_V_BD_HANDSET_CONTACTOR_INFO',//机主通讯录信息-
     'A_net_WA_BASIC_FJ_1001',//终端特征移动采集设备轨迹
 	'A_db_QHSJ_VIEW_COMPARERECORD_TO_QHSJ',//琼海检查站比对信息
 	'A_db_QHQB_T_QHQB_TLDP',//铁路订票数据信息
+	'A_db_QHQB_T_QHQB_DHHM',//电话号码信息表
     'A_db_zdrXY_T_ZZRK_QGZDRYXX'//人员专题库
 ];
 
@@ -625,6 +626,14 @@ function queryInfo() {
             queryInfo59();
             break;
         }
+        case '电话号码信息表': {
+            queryString = 'A_source:"A_db_QHQB_T_QHQB_DHHM"';
+            if (keyWord != '') {
+                queryString = queryString + ' AND ' + keyWord;
+            }
+            queryInfo61();
+            break;
+        }
         case '人员专题库': {
             queryString = 'A_source:"A_db_zdrXY_T_ZZRK_QGZDRYXX"';
             if (keyWord != '') {
@@ -674,7 +683,7 @@ function searchCount() {
                 $('li').children("span").html('');
                 return false;
             }
-            liArray.each(function (index, value) {
+            $("li[name='show']").each(function (index, value) {
                 var nameTmp = $(this).children('a').attr('id');
 				var count = null;
                 for (var i in datas){
@@ -4593,6 +4602,69 @@ function queryInfo59(offset) {
             }
         })
 }
+
+//电话号码信息表
+function queryInfo61(offset) {
+    console.log(queryString);
+    offset = offset || 0;
+    var pageNum = offset / pageSize;
+    $.get('datas/query',
+        {
+            queryString: queryString,
+            a_from: new Date('2005-01-01 00:00:00').getTime(),
+            a_to: new Date().getTime(),
+            pageSize: pageSize,
+            pageNum: pageNum
+        },
+        function (data) {
+            if(!data || data.hits == null || data.count == 0){
+                $("#tab1").html('<h3 class="h3_null">暂无数据</h3>');
+                return false;
+            }
+            var total = data.count;
+            var jsonHits = data.hits;
+
+            var typeList = [];
+            typeList.push('<table class="table table-striped table-bordered click_none"><thead><tr>');
+
+            //表头信息
+            typeList.push(['<th>', '联系人', '</th>'].join(''));
+            typeList.push(['<th>', '身份证号', '</th>'].join(''));
+            typeList.push(['<th>', '电话号码', '</th>'].join(''));
+            typeList.push(['<th>', '地址详址', '</th>'].join(''));
+            typeList.push(['<th>', '来源表表名', '</th>'].join(''));
+            typeList.push(['<th>', '入库时间', '</th>'].join(''));
+            typeList.push('</tr> </thead> <tbody>');
+
+            jsonHits.map(function (bean) {
+                var fields = bean.fields;
+                fields.QHQB_T_QHQB_DHHM_DZQH = nativeplaceDict[parseInt(fields.QHQB_T_QHQB_DHHM_DZQH)];
+                delete fields.QHQB_T_QHQB_DHHM_LYBWLM;
+                delete fields.QHQB_T_QHQB_DHHM_ID;
+                typeList.push('<tr class="detail" dataType="'+ queryString.replace(/A_source:"/,'').replace(/".*/,'') +'" fields=\''+ JSON.stringify(fields) +'\'>');
+
+                //每行的数据信息
+                typeList.push('<td>', fields.QHQB_T_QHQB_DHHM_LXR, '</td>');
+                typeList.push('<td>', fields.QHQB_T_QHQB_DHHM_GMSFHM, '</td>');
+                typeList.push('<td>', fields.QHQB_T_QHQB_DHHM_DHHM, '</td>');
+                typeList.push('<td>', fields.QHQB_T_QHQB_DHHM_DZXZ, '</td>');
+                typeList.push('<td>', fields.QHQB_T_QHQB_DHHM_LYBBM, '</td>');
+                typeList.push('<td>', formateDate4(fields.QHQB_T_QHQB_DHHM_RKSJ), '</td>');
+                // typeList.push('<td>', formateDate5(fields.QHQB_T_QHQB_TLDP_START_TIME), '</td>');
+                //typeList.push('<td>', '<a href="javascript:void(0)" class="detail" fields=\''+ JSON.stringify(fields) +'\'>查看详情</a>', '</td>');
+                typeList.push('</tr>');
+
+            });
+            typeList.push('</tbody></table>');
+            $("#tab1").html(typeList.join(''));
+            if(total > 9999) total = 9999;
+            if(total > pageSize){
+                $('#pages').show();
+                fenye('#pages', 'queryInfo59', total, pageNum + 1, pageSize);
+            }
+        })
+}
+
 // 全国重点人员
 function queryInfo60(offset) {
     console.log(queryString);
